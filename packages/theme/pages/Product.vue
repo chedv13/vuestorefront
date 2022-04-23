@@ -6,7 +6,7 @@
     />
     <div class="product">
       <LazyHydrate when-idle>
-        <SfGallery :images="productGallery" class="product__gallery" />
+        <SfGallery :images="productGallery" class="product__gallery"/>
       </LazyHydrate>
 
       <div class="product__info">
@@ -44,7 +44,7 @@
               :key="size.value"
               :value="size.value"
             >
-              {{size.value}}
+              {{ size.value }}
             </SfSelectOption>
           </SfSelect>
           <SfButton v-if="options.size" class="sf-button--text desktop-only product__guide">
@@ -68,12 +68,21 @@
             class="product__add-to-cart"
             @click="addItem({ product, quantity: parseInt(qty) })"
           />
+          <div style="display: flex; width: 100%;">
+            <SfButton
+              type="button"
+              class="sf-button color-secondary sd-draw-btn"
+              style="margin: var(--spacer-base) var(--spacer-sm); width: 100%;"
+            >
+              {{ $t('Draw') }}
+            </SfButton>
+          </div>
         </div>
 
         <LazyHydrate when-idle>
           <SfTabs :open-tab="1" class="product__tabs">
             <SfTab title="Description" style="padding: 0; margin: 0">
-              <div v-html="productGetters.getDescription(product)" class="product__description" ></div>
+              <div v-html="productGetters.getDescription(product)" class="product__description"></div>
             </SfTab>
             <SfTab
               title="Properties"
@@ -107,7 +116,7 @@
     </LazyHydrate>
 
     <LazyHydrate when-visible>
-      <InstagramFeed />
+      <InstagramFeed/>
     </LazyHydrate>
 
   </div>
@@ -134,11 +143,12 @@ import {
 
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
-import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useProduct, useCart, productGetters } from '@vue-storefront/spree';
-import { onSSR } from '@vue-storefront/core';
+import {ref, computed, useRoute, useRouter} from '@nuxtjs/composition-api';
+import {useProduct, useCart, productGetters, useUser} from '@vue-storefront/spree';
+import {onSSR} from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
+import {SD} from '@chedv13/sd-em';
 
 export default {
   name: 'Product',
@@ -148,15 +158,29 @@ export default {
     'stale-when-revalidate': 5
   }),
   setup() {
+    const {user} = useUser();
     const qty = ref(1);
     const route = useRoute();
     const router = useRouter();
-    const { products, search } = useProduct('products');
-    const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
-    const { addItem, loading } = useCart();
-    const { slug } = route.value.params;
+    const {
+      products,
+      search
+    } = useProduct('products');
+    const {
+      products: relatedProducts,
+      search: searchRelatedProducts,
+      loading: relatedLoading
+    } = useProduct('relatedProducts');
+    const {
+      addItem,
+      loading
+    } = useCart();
+    const {slug} = route.value.params;
 
-    const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: route.value.query })[0]);
+    const product = computed(() => productGetters.getFiltered(products.value, {
+      master: true,
+      attributes: route.value.query
+    })[0]);
     const optionTypes = computed(() => productGetters.getOptionTypeNames(product.value));
     const options = computed(() => productGetters.getAttributes(products.value, optionTypes.value));
     const configuration = computed(() => productGetters.getAttributes(product.value, optionTypes.value));
@@ -166,9 +190,29 @@ export default {
     const isInStock = computed(() => productGetters.getInStock(product.value));
     const productGallery = computed(() => productGetters.getGallery(product.value));
 
+    if (process.browser) {
+      const sneakerDrawsInstance = new SD('d9c7b289-e8ac-40da-92a3-18d0ca13c927');
+
+      sneakerDrawsInstance.init();
+
+      const data = {};
+      const userValue = user.value;
+
+      if (userValue) {
+        data.uid = userValue.id;
+      }
+
+      setTimeout(() => {
+        sneakerDrawsInstance.attachDrawingModal('button.sd-draw-btn', '80fee286-888b-414a-b2b9-349b56c7c6c6', data);
+      }, 0);
+    }
+
     onSSR(async () => {
-      await search({ slug });
-      await searchRelatedProducts({ categoryId: [categories.value[0]], limit: 8 });
+      await search({slug});
+      await searchRelatedProducts({
+        categoryId: [categories.value[0]],
+        limit: 8
+      });
     });
 
     const updateFilter = (filter) => {
@@ -186,7 +230,7 @@ export default {
       configuration,
       product,
       isInStock,
-      relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, { master: true })),
+      relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, {master: true})),
       relatedLoading,
       options,
       qty,
@@ -225,7 +269,7 @@ export default {
       description: 'Find stunning women cocktail and party dresses. Stand out in lace and metallic cocktail dresses and party dresses from all your favorite brands.',
       detailsIsActive: false,
       brand:
-          'Brand name is the perfect pairing of quality and design. This label creates major everyday vibes with its collection of modern brooches, silver and gold jewellery, or clips it back with hair accessories in geo styles.',
+        'Brand name is the perfect pairing of quality and design. This label creates major everyday vibes with its collection of modern brooches, silver and gold jewellery, or clips it back with hair accessories in geo styles.',
       careInstructions: 'Do not wash!'
     };
   }
@@ -240,10 +284,12 @@ export default {
     margin: 0 auto;
   }
 }
+
 .product {
   @include for-desktop {
     display: flex;
   }
+
   &__info {
     width: 100%;
     margin: var(--spacer-sm) auto;
@@ -252,6 +298,7 @@ export default {
       margin: 0 0 0 7.5rem;
     }
   }
+
   &__header {
     --heading-title-color: var(--c-link);
     --heading-title-font-weight: var(--font-weight--bold);
@@ -264,9 +311,11 @@ export default {
       margin: 0 auto;
     }
   }
+
   &__drag-icon {
     animation: moveicon 1s ease-in-out infinite;
   }
+
   &__price-and-rating {
     margin: 0 var(--spacer-sm) var(--spacer-base);
     align-items: center;
@@ -276,118 +325,140 @@ export default {
       margin: var(--spacer-sm) 0 var(--spacer-lg) 0;
     }
   }
+
   &__rating {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     margin: var(--spacer-xs) 0 var(--spacer-xs);
   }
+
   &__count {
     @include font(
-      --count-font,
-      var(--font-weight--normal),
-      var(--font-size--sm),
-      1.4,
-      var(--font-family--secondary)
+        --count-font,
+        var(--font-weight--normal),
+        var(--font-size--sm),
+        1.4,
+        var(--font-family--secondary)
     );
     color: var(--c-text);
     text-decoration: none;
     margin: 0 0 0 var(--spacer-xs);
   }
+
   &__description {
     @include font(
-      --product-description-font,
-      var(--font-weight--light),
-      var(--font-size--base),
-      1.6,
-      var(--font-family--secondary)
+        --product-description-font,
+        var(--font-weight--light),
+        var(--font-size--base),
+        1.6,
+        var(--font-family--secondary)
     );
     padding: 0;
     margin: 0;
   }
+
   &__select-size {
     margin: 0 var(--spacer-sm);
     @include for-desktop {
       margin: 0;
     }
   }
+
   &__colors {
     @include font(
-      --product-color-font,
-      var(--font-weight--normal),
-      var(--font-size--lg),
-      1.6,
-      var(--font-family--secondary)
+        --product-color-font,
+        var(--font-weight--normal),
+        var(--font-size--lg),
+        1.6,
+        var(--font-family--secondary)
     );
     display: flex;
     align-items: center;
     margin-top: var(--spacer-sm);
   }
+
   &__color-label {
     margin: 0 var(--spacer-sm) 0 0;
   }
+
   &__color {
     margin: 0 var(--spacer-2xs);
   }
+
   &__add-to-cart {
     margin: var(--spacer-2xl) 0 var(--spacer-sm);
   }
-  &__guide{
+
+  &__guide {
     display: block;
     margin: 0 0 var(--spacer-sm) auto;
   }
+
   &__compare,
   &__save {
     display: block;
     margin: var(--spacer-xl) 0 var(--spacer-base) auto;
   }
+
   &__compare {
     margin-top: 0;
   }
+
   &__tabs {
     --tabs-title-z-index: 0;
     margin: var(--spacer-lg) auto var(--spacer-2xl);
     --tabs-title-font-size: var(--font-size--lg);
   }
+
   &__property {
     margin: var(--spacer-sm) 0;
+
     &__button {
       --button-font-size: var(--font-size--base);
     }
   }
+
   &__review {
     padding-bottom: 24px;
     border-bottom: var(--c-light) solid 1px;
     margin-bottom: var(--spacer-base);
   }
+
   &__additional-info {
     color: var(--c-link);
     @include font(
-      --additional-info-font,
-      var(--font-weight--light),
-      var(--font-size--sm),
-      1.6,
-      var(--font-family--primary)
+        --additional-info-font,
+        var(--font-weight--light),
+        var(--font-size--sm),
+        1.6,
+        var(--font-family--primary)
     );
+
     &__title {
       font-weight: var(--font-weight--normal);
       font-size: var(--font-size--base);
       margin: 0 0 var(--spacer-sm);
+
       &:not(:first-child) {
         margin-top: 3.5rem;
       }
     }
+
     &__paragraph {
       margin: 0;
     }
   }
+
   &__gallery {
     flex: 1;
   }
 }
+
 .breadcrumbs {
   margin: var(--spacer-base) auto var(--spacer-lg);
 }
+
 @keyframes moveicon {
   0% {
     transform: translate3d(0, 0, 0);
