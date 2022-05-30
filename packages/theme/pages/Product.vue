@@ -191,7 +191,7 @@ export default {
     const productGallery = computed(() => productGetters.getGallery(product.value));
 
     if (process.browser) {
-      const sneakerDrawsInstance = new SD('70c6879e-71c1-480c-81cc-d971e8f51757');
+      const sneakerDrawsInstance = new SD('bf419a6c-bfa5-4fbe-9d9d-549cb046a5fa');
 
       sneakerDrawsInstance.init();
 
@@ -203,7 +203,7 @@ export default {
       }
 
       setTimeout(() => {
-        sneakerDrawsInstance.attachDrawingModal('button.sd-draw-btn', '02db39fb-e88d-46c6-8392-ba893efe48ad', data);
+        sneakerDrawsInstance.attachDrawingModal('button.sd-draw-btn', '949fe962-14b5-4e6d-848b-3772c3bb177c', data);
       }, 0);
     }
 

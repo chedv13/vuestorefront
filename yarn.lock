@@ -1168,10 +1168,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@chedv13/sd-em@0.1.11":
-  version "0.1.11"
-  resolved "https://npm.pkg.github.com/download/@chedv13/sd-em/0.1.11/961e6ad02ea52d9c6eb88cad318136a47a4dd5f4e358022995b4a490f5facd81#06c7c682a781feb4b601ed79f9dccd6690d838fd"
-  integrity sha512-qu0K+2WTzxBUsxBVz69vOArrPiALPy9TAvcnRi7eLRuEAIo9Whn6fcNoTqMnAtcVKGREoAKppXHWHTSRwiIYrQ==
+"@chedv13/sd-em@0.1.12":
+  version "0.1.12"
+  resolved "https://npm.pkg.github.com/download/@chedv13/sd-em/0.1.12/97e53178c81c5034a98a80c858ac885b37b0ffc1d6b88f58b970d9c9978f4e4c#b039cdbe8d758ea3f3b5e15f5d6f16e66a7d767a"
+  integrity sha512-qoD4367P4WxR47OEYP7k7IDndTXlNfW9w8OzmMQyxyFFmiAUeAmEHttqY16EGWi+koMUPzus7iADMsqUCwg8LA==
   dependencies:
     "@babel/template" "^7.16.7"
     babel-core "^6.26.3"
