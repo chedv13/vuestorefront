@@ -205,7 +205,6 @@ export default {
       if (userValue) {
         data.uid = userValue.id;
         data.email = userValue.email;
-
         data.name = `Name Surname${data.uid}`;
       }
 
