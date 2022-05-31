@@ -199,14 +199,12 @@ export default {
 
       sneakerDrawsInstance.init();
 
-      const data = {};
       const userValue = user.value;
-
-      if (userValue) {
-        data.uid = userValue.id;
-        data.email = userValue.email;
-        data.name = `Name Surname${data.uid}`;
-      }
+      const data = (userValue ? {
+        uid: userValue.id,
+        email: userValue.email,
+        name: `Name Surname${userValue.id}`
+      } : {});
 
       setTimeout(() => {
         sneakerDrawsInstance.attachDrawingModal('button.sd-draw-btn', '949fe962-14b5-4e6d-848b-3772c3bb177c', data);
