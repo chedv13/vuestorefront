@@ -11,7 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@chedv13/sd-em": "0.1.15",
+    "@chedv13/sd-em": "git+https://chedv13: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@github.com/chedv13/sd-em.git",
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/google-fonts": "^1.3.0",
     "@nuxtjs/style-resources": "^1.2.1",
