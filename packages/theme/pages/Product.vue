@@ -207,7 +207,9 @@ export default {
       } : {});
 
       setTimeout(() => {
-        sneakerDrawsInstance.attachDrawingModal('button.sd-draw-btn', '949fe962-14b5-4e6d-848b-3772c3bb177c', data);
+        sneakerDrawsInstance.attachDrawingModal(
+          'button.sd-draw-btn', '949fe962-14b5-4e6d-848b-3772c3bb177c', data
+        );
       }, 0);
     }
 
