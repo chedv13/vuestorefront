@@ -143,8 +143,8 @@ import {
 
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
-import {ref, computed, useRoute, useRouter, useContext} from '@nuxtjs/composition-api';
-import {useProduct, useCart, productGetters, useUser} from '@vue-storefront/spree';
+import {ref, computed, useRoute, useRouter, useContext, onMounted} from '@nuxtjs/composition-api';
+import {useProduct, useCart, productGetters, useUser, userGetters} from '@vue-storefront/spree';
 import {onSSR} from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
@@ -158,7 +158,10 @@ export default {
     'stale-when-revalidate': 5
   }),
   setup() {
-    const {user} = useUser();
+    const {
+      user,
+      load: loadUser
+    } = useUser();
     const qty = ref(1);
     const route = useRoute();
     const router = useRouter();
@@ -194,26 +197,32 @@ export default {
     const isInStock = computed(() => productGetters.getInStock(product.value));
     const productGallery = computed(() => productGetters.getGallery(product.value));
 
-    if (process.browser) {
-      const sneakerDrawsInstance = new SD('bf419a6c-bfa5-4fbe-9d9d-549cb046a5fa');
+    onMounted(async () => {
+      await loadUser();
 
-      sneakerDrawsInstance.init();
+      if (process.browser) {
+        const sneakerDrawsInstance = new SD('bf419a6c-bfa5-4fbe-9d9d-549cb046a5fa');
 
-      const userValue = user.value;
-      const data = (userValue ? {
-        uid: userValue.id,
-        email: userValue.email,
-        name: `Name Surname${userValue.id}`
-      } : {});
+        await sneakerDrawsInstance.init();
 
-      setTimeout(() => {
-        sneakerDrawsInstance.attachDrawingModal(
-          'button.sd-draw-btn', '949fe962-14b5-4e6d-848b-3772c3bb177c', data
-        );
-      }, 0);
-    }
+        const userValue = user.value;
+        console.log(userValue);
+        const data = (userValue ? {
+          uid: userValue.id,
+          email: userValue.email,
+          name: `Name Surname${userValue.id}`
+        } : {});
+
+        setTimeout(() => {
+          sneakerDrawsInstance.attachDrawingModal(
+            'button.sd-draw-btn', '949fe962-14b5-4e6d-848b-3772c3bb177c', data
+          );
+        }, 0);
+      }
+    });
 
     onSSR(async () => {
+      await loadUser();
       await search({slug});
       await searchRelatedProducts({
         categoryId: [categories.value[0]],
