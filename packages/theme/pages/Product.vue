@@ -201,12 +201,11 @@ export default {
       await loadUser();
 
       if (process.browser) {
-        const sneakerDrawsInstance = new SD('bf419a6c-bfa5-4fbe-9d9d-549cb046a5fa');
+        const sneakerDrawsInstance = new SD('1b9808ca-ee95-451d-ae1e-e831a579a7d9');
 
         await sneakerDrawsInstance.init();
 
         const userValue = user.value;
-        console.log(userValue);
         const data = (userValue ? {
           uid: userValue.id,
           email: userValue.email,
@@ -215,7 +214,7 @@ export default {
 
         setTimeout(() => {
           sneakerDrawsInstance.attachDrawingModal(
-            'button.sd-draw-btn', '949fe962-14b5-4e6d-848b-3772c3bb177c', data
+            'button.sd-draw-btn', '21993af0-6e51-4b73-a291-f5112ddb905c', data
           );
         }, 0);
       }
