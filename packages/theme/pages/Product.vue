@@ -214,7 +214,7 @@ export default {
 
         setTimeout(() => {
           sneakerDrawsInstance.attachDrawingModal(
-            'button.sd-draw-btn', 'a3c05377-eae6-4c54-92f6-ddea1cd616a8', data
+            'button.sd-draw-btn', 'e87c4ba4-f78c-482b-bacc-164dfc22157d', data
           );
         }, 0);
       }
